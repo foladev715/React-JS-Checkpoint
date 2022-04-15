@@ -1,50 +1,72 @@
 import logo from "./logo.svg";
 import "./App.css";
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
+import Navbar from "./components/navbar";
+import Footer from "./components/footer";
+class App extends React.Component {
+  state = {
+    fullName: "Deepika Padukone",
+    bio: "Deepika Padukone is an Indian actress who works in Hindi films. One of the highest-paid actresses in India, her accolades include three Filmfare Awards.",
+    imgSrc: "",
+    profession: "Actress",
+    show: true,
+    time: 0,
+  };
 
-function App() {
-  return (
-    <div className="App">
-      <form>
-        <div class="form-group">
-          <label for="exampleInputEmail1">Email address</label>
-          <input
-            type="email"
-            class="form-control"
-            id="exampleInputEmail1"
-            aria-describedby="emailHelp"
-            placeholder="Enter email"
-          />
-          <small id="emailHelp" class="form-text text-muted">
-            We'll never share your email with anyone else.
-          </small>
+  toggleShow = () => {
+    this.setState((prevProfile) => ({ show: !prevProfile.show }));
+    this.state.show
+      ? this.componentDidMount()
+      : this.setState({ time: 0 }) && this.componentWillUnmount();
+  };
+
+  componentDidMount() {
+    this.myInterval = setInterval(() => {
+      this.setState((prevState) => ({ time: prevState.time + 1 }));
+    }, 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.myInterval);
+  }
+  render() {
+    return (
+      <div className="screen">
+        <Navbar />
+        {this.state.show == true && (
+          <div class="card mb-3">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img
+                  src="/deepika_photo.jpg"
+                  class="img-fluid rounded-start"
+                  alt="..."
+                />
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">{this.state.fullName}</h5>
+                  <h6 class="card-title">{this.state.profession}</h6>
+                  <p class="card-text">{this.state.bio}</p>
+                  <p class="card-text">
+                    <small class="text-muted">
+                      Profile last mounted: {this.state.time} seconds ago
+                    </small>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        <div className="btn-div">
+          <button type="button" class="btn btn-dark" onClick={this.toggleShow}>
+            {this.state.show == true ? "Hide" : "Show"}
+          </button>
         </div>
-        <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input
-            type="password"
-            class="form-control"
-            id="exampleInputPassword1"
-            placeholder="Password"
-          />
-        </div>
-        <div class="form-check">
-          <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-          <label class="form-check-label" for="exampleCheck1">
-            Check me out
-          </label>
-        </div>
-        <button type="submit" class="btn btn-primary">
-          Submit
-        </button>
-      </form>
-      <br></br>
-      <>
-        <h2>Hello from my first component !!</h2>
-      </>
-    </div>
-  );
+        <Footer />
+      </div>
+    );
+  }
 }
 
 export default App;
